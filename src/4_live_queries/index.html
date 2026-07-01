@@ -1,0 +1,100 @@
+<!doctype html>
+
+<head>
+  <title>Live TODO</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@webqit/oohtml/dist/main.lite.js"></script>
+  <script src="https://unpkg.com/@webqit/fetch-plus/dist/main.js"></script>
+</head>
+
+<body>
+
+  <h1>Live TODO</h1>
+
+  <ul id="todo" render="#items: (item) of rows / 'li';">
+    <template scoped def="li">
+      <li render="%done: item.done;">
+        <span render="#text: '(' + item.id + ')';"></span><span class="marker"></span><span render="#text: item.title"></span>
+      </li>
+    </template>
+  </ul>
+
+  <p>
+    <em>💡 <strong>Live Query Demo:</strong><br>
+    The server has sent a live query result directly to this client as a live response. You should see updates appear here in real-time as remote DB changes.<br>
+    Try running the included <code>update.js</code> script in a separate terminal to trigger live updates in the database, and watch them reflect here instantly!
+    </em>
+  </p>
+
+  <script type="module">
+    const { LiveResponse } = window.webqit;
+    
+    // Connect to the live query response
+    const { body: rows } = await LiveResponse.from(fetch('/list')).now();
+    // Bind the reactive result set to the DOM
+    document.querySelector('#todo').bindings.rows = rows;
+  </script>
+
+  <style>
+    :root {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      color: gray;
+      --main-color: red;
+    }
+
+    ul {
+      padding: 20px;
+      border-block: 2px solid silver;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+    }
+
+    li span:not(:first-of-type) {
+      color: var(--main-color);
+    }
+
+    li .marker {
+      width: 1.2em;
+      height: 1.2em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      background-color: currentColor;
+    }
+
+    li .marker::before {
+      content: "✗";
+      color: white;
+    }
+
+    /* Done items */
+
+    li.done span:not(:first-of-type) {
+      color: gray;
+    }
+
+    li.done .marker {
+      opacity: 0.3;
+    }
+
+    li.done .marker::before {
+      content: "✓";
+    }
+
+    /* Note */
+
+    code { color: var(--main-color); }
+  </style>
+
+</body>
+</html>

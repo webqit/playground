@@ -1,0 +1,44 @@
+<!doctype html>
+
+<head>
+  <title>Live Chat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@webqit/fetch-plus/dist/main.js"></script>
+</head>
+
+<body>
+
+  <h1>Chat</h1>
+  <ul id="log"></ul>
+  <input id="msg" placeholder="Type and press enter" />
+
+  <p>
+    <em>💡 <strong>Messaging Demo:</strong></em><br>
+    The server is in messaging mode with this client over the same HTTP request. You can send messages to the server using the input box above. It will echo them back as received. You should see your own messages appear here as the server echoes them back.
+  </p>
+
+  <script type="module">
+    const { LiveResponse } = window.webqit;
+    
+    // Fetch the live response and extract the underlying bidirectional port
+    const { port } = await LiveResponse.from(fetch('/chat')).now();
+
+    // Listen for incoming messages from the server
+    port.addEventListener('message', (e) => {
+        const li = document.createElement('li');
+        li.textContent = e.data;
+        log.appendChild(li);
+    });
+
+    const msg = document.querySelector('#msg');
+    msg.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            port.postMessage(msg.value);
+            msg.value = '';
+        }
+    });
+  </script>
+</body>
+
+</html>

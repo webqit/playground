@@ -1,0 +1,105 @@
+<!doctype html>
+
+<head>
+  <title>Live TODO</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@webqit/oohtml/dist/main.lite.js"></script>
+  <script src="https://unpkg.com/@linked-db/linked-ql/dist/browser.js"></script>
+</head>
+
+<body>
+
+  <h1>Live TODO</h1>
+
+  <ul id="todo" render="#items: (item) of rows / 'li';">
+    <template scoped def="li">
+      <li render="%done: item.done;">
+        <span render="#text: '(' + item.id + ')';"></span><span class="marker"></span><span render="#text: item.title"></span>
+      </li>
+    </template>
+  </ul>
+
+  <p>
+    <em>💡 <strong>EdgeClient/Worker Demo:</strong><br>
+    The server has exposed a PostgreSQL database to this client via EdgeWorker. This client has directly queried the remote DB via EdgeClient.<br>
+    This is a live query, so you should see updates appear here in real-time as remote DB changes.<br>
+    Try running the included <code>update.js</code> script in a separate terminal to see live database updates reflect here!
+    </em>
+  </p>
+
+  <script type="module">
+    const { EdgeClient } = window.webqit;
+    
+    // Initialize the EdgeClient to talk directly to the EdgeWorker
+    const db = new EdgeClient({ url: '/api/db', type: 'http' });
+    await db.connect();
+
+    // Issue a live query directly from the client
+    const result = await db.query('SELECT id, title, done FROM test_todos', { live: true });
+    // Bind the reactive result set to the DOM
+    document.querySelector('#todo').bindings.rows = result.rows;
+  </script>
+
+  <style>
+    :root {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      color: gray;
+      --main-color: teal;
+    }
+
+    ul {
+      padding: 20px;
+      border-block: 2px solid silver;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+    }
+
+    li span:not(:first-of-type) {
+      color: var(--main-color);
+    }
+
+    li .marker {
+      width: 1.2em;
+      height: 1.2em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      background-color: currentColor;
+    }
+
+    li .marker::before {
+      content: "✗";
+      color: white;
+    }
+
+    /* Done items */
+
+    li.done span:not(:first-of-type) {
+      color: gray;
+    }
+
+    li.done .marker {
+      opacity: 0.3;
+    }
+
+    li.done .marker::before {
+      content: "✓";
+    }
+
+    /* Note */
+
+    code { color: var(--main-color); }
+  </style>
+
+</body>
+</html>

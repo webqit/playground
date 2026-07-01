@@ -1,0 +1,32 @@
+<!doctype html>
+
+<head>
+  <title>Live News</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@webqit/fetch-plus/dist/main.js"></script>
+</head>
+
+<body>
+
+  <h1></h1>
+
+  <p>
+    <em>💡 <strong>Multi-Response Demo:</strong></em><br>
+    The server is in multi-response mode with this client over the same HTTP request. You should see updates appear here as the server swaps responses in real-time.
+  </p>
+
+  <script type="module">
+    const { LiveResponse } = window.webqit;
+    
+    // Connect to the live response stream
+    const liveRes = LiveResponse.from(fetch('/news'));
+
+    // Listen for response swaps and update the UI
+    liveRes.addEventListener('replace', (e) => {
+        document.querySelector('h1').textContent = e.data.body.headline;
+    });
+  </script>
+</body>
+
+</html>

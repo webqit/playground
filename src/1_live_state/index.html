@@ -1,0 +1,32 @@
+<!doctype html>
+
+<head>
+  <title>Live Counter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@webqit/fetch-plus/dist/main.js"></script>
+</head>
+
+<body>
+
+  <h1></h1>
+
+  <p>
+    <em>💡 <strong>Live State Demo:</strong></em><br>
+    The server has sent a live state directly to this client. You should see updates appear here in real-time as the server-side state changes.
+  </p>
+
+  <script type="module">
+    const { LiveResponse, Observer } = window.webqit;
+    
+    // Fetch the live response and extract its reactive body
+    const { body: state } = await LiveResponse.from(fetch('/counter')).now();
+
+    // Bind the reactive state to the UI
+    Observer.observe(state, () => {
+        document.querySelector('h1').textContent = 'Count: ' + state.count;
+    });
+  </script>
+</body>
+
+</html>

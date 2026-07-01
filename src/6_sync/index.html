@@ -1,0 +1,150 @@
+<!doctype html>
+
+<head>
+  <title>Synced TODO</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@webqit/oohtml/dist/main.lite.js"></script>
+  <script src="https://unpkg.com/@linked-db/linked-ql/dist/browser.js"></script>
+</head>
+
+<body>
+
+  <h1>Synced TODO</h1>
+
+  <ul id="todo" render="#items: (item) of rows / 'li';">
+    <template scoped def="li">
+      <li render="%done: item.done;">
+        <span render="#text: '(' + item.id + ')';"></span><span class="marker"></span><span render="#text: item.title"></span>
+      </li>
+    </template>
+  </ul>
+
+  <p>
+    <button id="add-one">Add Item</button>
+    <button id="all-done">Mark All Done</button>
+  </p>
+
+  <p>
+    <em>💡 <strong>Sync Demo:</strong><br>
+    The server has exposed a PostgreSQL database to this client via EdgeWorker. This client has a local FlashQL instance that syncs with the remote DB. It has also now queried the local FlashQL instance.<br>
+    This is a live query, so you should see updates appear here in real-time as remote DB changes or local updates propagate.<br><br>
+    To trigger remote writes directly, try running the included <code>update.js</code> script. Updates should sync from the upstream DB to the local DB.<br>
+    To trigger local writes, use the buttons above. Try adding new items or marking existing ones done. Updates should sync from the local DB to the upstream DB.<br><br>
+
+    <em>💡 <strong>Multi-Tab Sync:</strong><br>
+    Open a second tab to see changes sync across clients in real-time!<br>
+    Make changes in one tab or directly on the remote database (via <code>update.js</code>). Updates should sync across all tabs!<br><br>
+
+    <em>💡 <strong>Offline Test:</strong><br>
+    Open Chrome DevTools -> <strong>Network</strong> tab -> Change "No throttling" to <strong>"Offline"</strong>.<br>
+    Try adding or editing items while offline, then switch back to "No throttling" (Online) and watch the local DB automatically sync with the upstream PostgreSQL!<br>
+    Try switching the <code>write_policy</code> from <code>origin_first</code> to <code>local_first</code> in the <code>index.html</code> source code to opt into optimistic UI behavior when offline!
+    </em>
+  </p>
+
+  <script type="module">
+    const { EdgeClient, FlashQL } = window.webqit;
+
+    // Initialize the local-first FlashQL database
+    const db = new FlashQL({
+      getUpstreamClient: () => new EdgeClient({ url: '/api/db', type: 'http' }),
+    });
+    await db.connect();
+
+    await db.query(`
+      CREATE REALTIME VIEW public.test_todos AS
+      SELECT * FROM public.test_todos
+      WITH (
+        replication_origin = 'postgres:db1',
+        write_policy = 'origin_first' -- or 'local_first' for optimistic writes
+      )
+    `);
+
+    window.addEventListener('online', async () => {
+      console.log('Back online! Syncing data...');
+      const result = await db.sync.sync();
+      console.log('Sync result:', result);
+    });
+
+    // Issue a live query against the local cache
+    const result = await db.query('SELECT id, title, done FROM test_todos', { live: true });
+    // Bind the reactive result set to the DOM
+    document.querySelector('#todo').bindings.rows = result.rows;
+
+    // -- Handle "Add Three Items" button click
+    document.querySelector('#add-one').addEventListener('click', async () => {
+      await db.query(
+        `INSERT INTO test_todos (title, done) VALUES ($1, false)`,
+        [prompt('Enter title for new TODO item:')]
+      );
+    });
+
+    // -- Handle "Mark All Done" button click
+    document.querySelector('#all-done').addEventListener('click', async () => {
+      await db.query('UPDATE test_todos SET done = true');
+    });
+  </script>
+
+  <style>
+    :root {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      color: gray;
+      --main-color: purple;
+    }
+
+    ul {
+      padding: 20px;
+      border-block: 2px solid silver;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+    }
+
+    li span:not(:first-of-type) {
+      color: var(--main-color);
+    }
+
+    li .marker {
+      width: 1.2em;
+      height: 1.2em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      background-color: currentColor;
+    }
+
+    li .marker::before {
+      content: "✗";
+      color: white;
+    }
+
+    /* Done items */
+
+    li.done span:not(:first-of-type) {
+      color: gray;
+    }
+
+    li.done .marker {
+      opacity: 0.3;
+    }
+
+    li.done .marker::before {
+      content: "✓";
+    }
+
+    /* Note */
+
+    code { color: var(--main-color); }
+  </style>
+
+</body>
+</html>

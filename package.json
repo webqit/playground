@@ -1,0 +1,41 @@
+{
+  "name": "",
+  "title": "WebQit Playground",
+  "description": "A development environment for testing and experimenting with WebQit libraries and tools.",
+  "keywords": [
+    "liveresponse",
+    "live-response",
+    "Webflo",
+    "linked-ql",
+    "flashql",
+    "http",
+    "express",
+    "node",
+    "websocket",
+    "realtime",
+    "webqit"
+  ],
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webqit/playground.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webqit/playground/issues"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"No tests to run\" && exit 0"
+  },
+  "dependencies": {
+    "@linked-db/linked-ql": "^1.1.17",
+    "@webqit/fetch-plus": "^0.1.34",
+    "@webqit/node-live-response": "^0.1.17"
+  },
+  "author": "Oxford Harrison <oxharris.dev@gmail.com>",
+  "maintainers": [
+    "Oxford Harrison <oxharris.dev@gmail.com>"
+  ],
+  "contributors": []
+}

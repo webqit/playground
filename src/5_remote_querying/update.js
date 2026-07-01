@@ -1,0 +1,1 @@
+import '../4_live_queries/update.js';
