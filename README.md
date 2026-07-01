@@ -61,7 +61,15 @@ Showcases full offline-capable, local-first database synchronization. Instead of
 
 ## Running the Examples
 
-Each example consists of at least a basic `server.js` file and a small `index.html` file. **The examples in LinkedQL Recipes also have a screencast video of the demo itself.** Playing the screencast before running the code in each case is recommended.
+⤷ clone → install → run
+
+```
+git clone https://github.com/webqit/playground.git
+cd playground
+npm install
+```
+
+The runnable examples live in the `src` dir. Each example consists of at least a basic `server.js` file and a small `index.html` file. **The examples in LinkedQL Recipes also have a screencast video of the demo itself.** Playing the screencast before running the code in each case is recommended.
 
 To run any example:
 
@@ -69,7 +77,7 @@ To run any example:
 2. Run the `server.js` script of the desired example using Node.js:
 
    ```bash
-   node playground/1_live_state/server.js
+   node src/1_live_state/server.js
    ```
 
 3. Open **[http://localhost:3000](http://localhost:3000)** in your browser to interact with the live demo.
