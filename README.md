@@ -32,7 +32,7 @@ These recipes demonstrate **LinkedQL's** _live queries_ and _sync_ capabilities.
 
 **All three examples in this section build the exact same Todo List application** – but each implements it using a different architectural pattern, based on [LinkedQL Integration Patterns](https://linked-ql.netlify.app/guides/integration-patterns). You can observe how the application is architected differently under the hood across three distinct paradigms.
 
-> **Prerequisite:** The LinkedQL examples assume you have a **PostgreSQL database running on your local machine** using the default parameters (e.g., `localhost:5432`) and **no password**. They also assume that [PostgreSQL's logical replication is enabled](https://linked-ql.netlify.app/guides/postgresql#realtime-setup) on the database.
+> **Prerequisite:** The LinkedQL examples assume you have a **PostgreSQL database running on your local machine**, using the default parameters (e.g., `localhost:5432`) and **no password**. (If you have a Mac and need a PostgreSQL database, you may want to consider [Postgres.app](https://postgresapp.com/downloads.html).) They also assume that [PostgreSQL's logical replication is enabled](https://linked-ql.netlify.app/guides/postgresql#realtime-setup) on the database.
 >
 > The examples will automatically connect and set up the necessary table(s) for the TODO app. Tables are automatically dropped when the process ends.
 

@@ -30,7 +30,7 @@
   "dependencies": {
     "@linked-db/linked-ql": "^1.1.19",
     "@webqit/fetch-plus": "^0.1.39",
-    "@webqit/node-live-response": "^0.1.23"
+    "@webqit/node-live-response": "^0.1.24"
   },
   "author": "Oxford Harrison <oxharris.dev@gmail.com>",
   "maintainers": [
