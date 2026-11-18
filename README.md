@@ -1,8 +1,8 @@
-# LiveResponse & LinkedQL Playground
+# WebQit Playground
 
-Welcome to the **LiveResponse & LinkedQL Playground**!
+Welcome to the WebQit playground.
 
-This directory contains series of interactive examples that demonstrate the core capabilities of **[LiveResponse](https://github.com/webqit/node-live-response)** and **[LinkedQL](https://github.com/linked-db/linked-ql)**—both independently and together.
+This directory contains series of interactive examples that demonstrate the core capabilities of the WebQit stack, starting with **[LiveResponse](https://github.com/webqit/node-live-response)** and **[LinkedQL](https://github.com/linked-db/linked-ql)**—both demonstrated individually and together.
 
 > **💡 Hack around!** Don't hesitate to open the files in these directories, tweak the code, and observe the behaviors. This playground is designed for you to get your hands dirty!
 
