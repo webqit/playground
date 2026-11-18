@@ -52,10 +52,17 @@ Demonstrates remote querying using a dedicated `EdgeWorker`. Here, the `EdgeWork
 
 ### [6_sync](./src/6_sync)
 
+<a name="6_sync"></a>
+
 **Architecture: Local-First Synchronization**
 
 Showcases full offline-capable, local-first database synchronization. Instead of just querying remote data, the client maintains a synchronized local copy of the database tables.
 
+Below is a video highlight:
+
+https://github.com/user-attachments/assets/402c2918-36f1-4785-97ec-0bacc4ab179e
+
+---
 
 ---
 
